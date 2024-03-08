@@ -66,8 +66,7 @@ def quantize_model(mod, params, activation_bit):
                                 nbit_activation=activation_bit,
                                 dtype_input='int8',
                                 dtype_weight='int8',
-                                dtype_activation='int' + str(activation_bit),
-                                rounding='UPWARD'):
+                                dtype_activation='int' + str(activation_bit)):
         quantized_mod = relay.quantize.quantize(mod, params)
     return quantized_mod
 

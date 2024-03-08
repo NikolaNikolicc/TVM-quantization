@@ -56,9 +56,6 @@ def generate_relay_graph(img, scripted_model):
     input_name = "input0"
     shape_list = [(input_name, img.shape)]
     mod, params = relay.frontend.from_pytorch(scripted_model, shape_list)
-    # Checking TVM code in the compiled module is optional and only for verification purposes
-    with open("output-relay-unquantized.txt", "w") as relay_output:
-        relay_output.write(str(mod))
     return mod, params, input_name
 
 def hardware_configuration(mod, params):
@@ -68,6 +65,9 @@ def hardware_configuration(mod, params):
     # build relay
     with tvm.transform.PassContext(opt_level=3):
         lib = relay.build(mod, target=target, params=params)
+        # dump compiled module to a file (optional)
+        with open("output-compiled-module-unquantized.ll", "w") as compiled_unquantized:
+            compiled_unquantized.write(lib.get_lib().get_source("ll"))
     return lib, dev
 
 def execute_graph_on_tvm(lib, dev, input_name, img):

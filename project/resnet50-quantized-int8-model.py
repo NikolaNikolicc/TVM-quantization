@@ -52,22 +52,13 @@ def load_image():
     return img
 
 def generate_relay_graph(img, scripted_model):
-    # Import the graph to Relay
     input_name = "input0"
     shape_list = [(input_name, img.shape)]
+    # convert scripted model to relay model
     mod, params = relay.frontend.from_pytorch(scripted_model, shape_list)
-    # Checking TVM code in the compiled module is optional and only for verification purposes
-    with relay.quantize.qconfig(global_scale=8.0,
-                                nbit_input=8,
-                                nbit_weight=8,
-                                nbit_activation=16,
-                                dtype_input='int8',
-                                dtype_weight='int8',
-                                dtype_activation='int16',
-                                rounding='UPWARD'):
+    # quantization to int8
+    with relay.quantize.qconfig():
         quantized_mod = relay.quantize.quantize(mod, params)
-        with open("output-relay-quantized-int8.txt", "w") as relay_output_quantize:
-            relay_output_quantize.write(str(quantized_mod))
     return quantized_mod, params, input_name
 
 
@@ -78,6 +69,9 @@ def hardware_configuration(mod, params):
     # build relay
     with tvm.transform.PassContext(opt_level=3):
         lib = relay.build(mod, target=target, params=params)
+        # dump compiled module to a file (optional)
+        with open("output-compiled-module-quantized-int8.ll", "w") as compiled_unquantized:
+            compiled_unquantized.write(lib.get_lib().get_source("ll"))
     return lib, dev
 
 def execute_graph_on_tvm(lib, dev, input_name, img):

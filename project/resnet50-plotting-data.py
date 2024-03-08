@@ -52,7 +52,7 @@ def plotting_mean_values(computed_means):
     # Legend setup
     ax.set_xlabel('Type of compilation')
     ax.set_ylabel('Time [milliseconds]')
-    ax.set_title('Average TVM Compilation Time after 450 executions')
+    ax.set_title('Average Inference Time after 450 executions')
     ax.set_xticks(index + bar_width / 2)
     ax.set_xticklabels(categories)
     ax.legend(loc="upper left", bbox_to_anchor=(1,1), title="Target device")
@@ -83,7 +83,7 @@ def plotting_mean_values(computed_means):
     mng.resize(window_width, window_height)
 
     fig.set_size_inches(window_width / fig.dpi, window_height / fig.dpi)
-    plt.savefig('plt_avg_tvm_compilation_time.png')
+    plt.savefig('plt_avg_inference_time.png')
     plt.show()
 
 def plotting_all_values_gpu(data_lines):
@@ -107,7 +107,7 @@ def plotting_all_values_gpu(data_lines):
     # Adding labels and title
     plt.xlabel('Iterations (each iteration represents 30 executions)')
     plt.ylabel('Time [milliseconds]')
-    plt.title('TVM Compilation Times after 15 Iterations Executed on GPU (each iteration represents 30 executions)')
+    plt.title('Inference Times after 15 Iterations on GPU (each iteration represents 30 executions)')
     plt.legend(title="Type of compilation")
 
     # Adding note
@@ -121,7 +121,6 @@ def plotting_all_values_gpu(data_lines):
     plt.savefig("plt_performance_results_all_iterations_gpu.png")
     # Show the plot
     plt.show()
-
 
 def plotting_all_values_cpu(data_lines):
     # Extracting the True values for each category
@@ -144,7 +143,7 @@ def plotting_all_values_cpu(data_lines):
     # Adding labels and title
     plt.xlabel('Iterations (each iteration represents 30 executions)')
     plt.ylabel('Time [milliseconds]')
-    plt.title('TVM Compilation Times after 15 Iterations Executed on CPU (each iteration represents 30 executions)')
+    plt.title('Inference Times after 15 Iterations on CPU (each iteration represents 30 executions)')
     plt.legend(title="Type of compilation")
 
     # Adding note
